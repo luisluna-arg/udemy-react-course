@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import SearchBox from './components/SearchBox'
 import SearchResults from './components/SearchResults'
-
 import './style.css'
+import axios from 'axios'
 
 export default function Search() {
   const [isAtTop, setIsAtTop] = useState(false)
@@ -11,9 +11,18 @@ export default function Search() {
 
   useEffect(() => {
     const getUsers = async () => {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users');
-        const data = await response.json();
-        setUserData(data);
+      try {
+        // const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        // const data = await response.json();
+        // setUserData(data);
+
+        const { data } = await axios.get(
+          'https://jsonplaceholder.typicode.com/users',
+        )
+        setUserData(data)
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     getUsers().catch(null)
@@ -37,7 +46,7 @@ export default function Search() {
         )
       })
 
-      console.log("filterData", filterData);
+      console.log('filterData', filterData)
 
       setResults(filterData)
     }
