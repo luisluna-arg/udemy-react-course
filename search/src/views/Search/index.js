@@ -1,45 +1,56 @@
-import React, { useState } from 'react';
-import SearchBox from './components/SearchBox';
-import SearchResults from './components/SearchResults';
+import React, { useEffect, useState } from 'react'
+import SearchBox from './components/SearchBox'
+import SearchResults from './components/SearchResults'
 
-import data from '../../data/users.json';
-import './style.css';
+import './style.css'
 
 export default function Search() {
-    const [isAtTop, setIsAtTop] = useState(false);
-    const [userData,] = useState(data);
-    const [results, setResults] = useState([]);
+  const [isAtTop, setIsAtTop] = useState(false)
+  const [results, setResults] = useState([])
+  const [userData, setUserData] = useState([])
 
-    const handleCloseSearch = () => {
-        setIsAtTop(false);
-        setResults([]);
-    };
+  useEffect(() => {
+    const getUsers = async () => {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        const data = await response.json();
+        setUserData(data);
+    }
 
-    const handleSearchClick = (searchText) => {
-        setIsAtTop(true);
-        if (userData?.length) {
-            const searchTextMinus = searchText.toLocaleLowerCase();
-            const filterData = userData.filter((value) => {
-                return (
-                    value.name.toLocaleLowerCase().includes(searchTextMinus) ||
-                    value.phone.toLocaleLowerCase().includes(searchTextMinus) ||
-                    value.email.toLocaleLowerCase().includes(searchTextMinus) ||
-                    value.username.toLocaleLowerCase().includes(searchTextMinus)
-                );
-            });
+    getUsers().catch(null)
+  }, [])
 
-            setResults(filterData);
-        }
-    };
+  const handleCloseSearch = () => {
+    setIsAtTop(false)
+    setResults([])
+  }
 
-    return (
-        <div className={`search ${isAtTop ? "serach--top" : "search--center"}`}>
-            <SearchBox
-                onSearch={handleSearchClick}
-                onClose={handleCloseSearch}
-                isSearching={isAtTop}
-            />
-            <SearchResults results={results} isSearching={isAtTop} />
-        </div>
-    );
+  const handleSearchClick = (searchText) => {
+    setIsAtTop(true)
+    if (userData?.length) {
+      const searchTextMinus = searchText.toLocaleLowerCase()
+      const filterData = userData.filter((value) => {
+        return (
+          value.name.toLocaleLowerCase().includes(searchTextMinus) ||
+          value.phone.toLocaleLowerCase().includes(searchTextMinus) ||
+          value.email.toLocaleLowerCase().includes(searchTextMinus) ||
+          value.username.toLocaleLowerCase().includes(searchTextMinus)
+        )
+      })
+
+      console.log("filterData", filterData);
+
+      setResults(filterData)
+    }
+  }
+
+  return (
+    <div className={`search ${isAtTop ? 'serach--top' : 'search--center'}`}>
+      <SearchBox
+        onSearch={handleSearchClick}
+        onClose={handleCloseSearch}
+        isSearching={isAtTop}
+      />
+      <SearchResults results={results} isSearching={isAtTop} />
+    </div>
+  )
 }
