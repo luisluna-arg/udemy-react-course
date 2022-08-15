@@ -12,7 +12,8 @@ export default function PokeDetail() {
 
     useEffect(() => {
         getPokemonDetail(id).catch(null);
-    }, [getPokemonDetail, id]);
+        //eslint-disable-next-line
+    }, []);
 
     if (isLoading) return (<Loading title="Cargando pokemon..." />)
 

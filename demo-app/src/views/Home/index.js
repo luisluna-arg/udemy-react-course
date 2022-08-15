@@ -10,7 +10,8 @@ export default function Home() {
 
   useEffect(() => {
     getPokemons().catch(null);
-  }, [getPokemons])
+    //eslint-disable-next-line
+  }, [])
 
   if (isLoading) return (<Loading title="Cargando pokemon..." />)
 
