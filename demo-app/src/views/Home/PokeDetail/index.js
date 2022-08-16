@@ -1,14 +1,26 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
+import { 
+    useEffect, 
+    // useContext 
+} from 'react';
+import shallow from "zustand/shallow";
 
-import PokemonContext from "../../../context/pokemons";
+// import PokemonContext from "../../../context/pokemons";
 import PokeStats from './components/PokeStats';
 import Loading from '../../../components/Loading';
 import ErrorMessage from '../../../components/ErrorMessage';
+import usePokemonsStore from "../../../zustand/stores/pokemons";
 
 export default function PokeDetail() {
     const { id } = useParams();
-    const { pokemonDetail, getPokemonDetail, isLoading, hasError, errorMessage } = useContext(PokemonContext);
+    const { pokemonDetail, getPokemonDetail, isLoading, hasError, errorMessage } = usePokemonsStore(state => ({
+        pokemonDetail: state.pokemonDetail,
+        getPokemonDetail: state.getPokemonDetail,
+        isLoading: state.isLoading,
+        hasError: state.hasError,
+        errorMessage: state.errorMessage
+    }), shallow); // Using zustand
+    // const { pokemonDetail, getPokemonDetail, isLoading, hasError, errorMessage } = useContext(PokemonContext); // Using context provider
 
     useEffect(() => {
         getPokemonDetail(id).catch(null);
